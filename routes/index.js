@@ -62,7 +62,9 @@ router.post("/login", async (req, res) => {
         res.render("login.njk", {
           title: "Login", 
           message: "Best service, legit.", 
-          error: "Wrong username or password"
+          error: "Wrong username or password",
+          loginbutton: "Log In",
+          loginURL: "/login"
         })
       }
     })
@@ -108,7 +110,9 @@ router.post("/signup", async (req, res) => {
     res.render("signup.njk", {
         title: "Sign Up", 
         message: "Best service, legit.", 
-        error: "*User already exists"
+        error: "*User already exists",
+        loginbutton: "Log In",
+        loginURL: "/login"
     })
   }
 })
