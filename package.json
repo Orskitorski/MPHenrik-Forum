@@ -3,8 +3,12 @@
   "version": "1.0.0",
   "main": "server.js",
   "type": "module",
+  "engines": {
+    "node": "16"
+  },
   "scripts": {
-    "dev": "nodemon -e js,html,njk,json,css ./server.js"
+    "dev": "nodemon -e js,html,njk,json,css ./server.js",
+    "start": "node server.js"
   },
   "keywords": [],
   "author": "",
