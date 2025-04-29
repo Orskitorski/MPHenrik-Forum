@@ -1,0 +1,20 @@
+{% extends "layout.njk" %}
+{% block content %}
+    <main class="container">
+        <h2>{{title}}</h2>
+        <h3>{{message}}</h3>
+        <form action="/signup" method="POST">
+            <div class="form-field">
+                <label for="username">Username:</label>
+                <input type="text" name="username" id="username">
+            </div>
+            <div class="form-field">
+                <label for="password">Password:</label>
+                <input type="password" name="password" id="password">
+            </div>
+            <button type="submit">Sign Up</button>
+            <p class="error">{{error}}</p>
+            <p>Already have a user? <a href="/login">Login!</a></p>
+        </form>
+    </main>
+{% endblock %}

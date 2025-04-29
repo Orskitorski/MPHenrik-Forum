@@ -1,0 +1,13 @@
+{% extends "layout.njk" %}
+{% block content %}
+    <main class="container">
+        <h2>{{message}}</h2>
+        <form action="/news/post" method="POST">
+            <div class="form-field">
+                <label for="message">Message:</label>
+                <textarea type="text" name="message" id="message"></textarea>
+            </div>
+            <button type="submit">Post</button>
+        </form>
+    </main>
+{% endblock %}

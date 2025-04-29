@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/reset.css">
+    <link rel="stylesheet" href="/stylesheet.css">
+    <title>My Pocket Henrik Forum</title>
+</head>
+<body>
+    <div class="sidebar">
+        <header>
+            <h1><a href="/">MPH</a></h1>
+            <img src="/images/MPHenrik_Tamagochi.png" alt="MPH-Logo">
+        </header>
+        <ul>
+            <li>
+                <a href={{loginURL}}>{{loginbutton}}</a>
+            </li>
+            <li>
+                <a href="/news">News</a>
+            </li>
+            <li>
+                <a href="/">Official Site</a>
+            </li>
+        </ul>
+    </div>
+    {% block content %}
+    {% endblock %}
+</body>
+</html>
