@@ -11,14 +11,14 @@ router.get("/", async (req, res)=> {
         ORDER BY created_at DESC;`)
     if (req.session.login) {
         res.render("news.njk", {
-            message: `Welcome to the "My Pocket Henrik" Forum!`,
+            message: `The Official "My Pocket Henrik" Forum!`,
             posts: posts,
             loginbutton: "Log Out",
             loginURL: "/logout"
         })
     } else {
         res.render("news.njk", {
-            message: `Welcome to the "My Pocket Henrik" Forum!`,
+            message: `The Official "My Pocket Henrik" Forum!`,
             posts: posts,
             loginbutton: "Log In",
             loginURL: "/login"

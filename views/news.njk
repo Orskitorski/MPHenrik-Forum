@@ -7,13 +7,12 @@
             <li class="post">
                 <article>
                     <header>
-                        <h3>{{post.name}}</h3>
+                        <h3><i class="fa fa-user"></i> {{post.name}}</h3>
                         <time datetime="{{post.created_at}}">{{post.created_at}}</time>
                     </header>
                     <p>{{post.message}}</p>
                     <footer>
                         <ul>
-                            <li><a href=""><i class="fa fa-star"></i></a></li>
                             <li><a href=""><i class="fa fa-reply"></i></a></li>
                             <li><a href="/news/{{post.id}}/edit"><i class="fa fa-pencil"></i></a></li>
                             <li><a href="/news/{{post.id}}/delete"><i class="fa fa-trash"></i></a></li>
