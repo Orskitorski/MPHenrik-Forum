@@ -17,39 +17,48 @@ router.get("/", async (req, res)=> {
             loginURL: "/logout"
         })
     } else {
-        res.redirect("/login")
+        res.render("news.njk", {
+            message: `Welcome to the "My Pocket Henrik" Forum!`,
+            posts: posts,
+            loginbutton: "Log In",
+            loginURL: "/login"
+        })
     }
 })
 
 router.get("/:id/delete", async (req, res) => {
     
     const id = req.params.id
+    if (req.session.adminStatus) {
+        if (!Number.isInteger(Number(id))) {
+            return res.status(400).send("Invalid ID")
+        }
 
-    if (!Number.isInteger(Number(id))) {
-        return res.status(400).send("Invalid ID")
-    }
+        await db.run(`DELETE FROM posts WHERE id = ?`, [id])
 
-    await db.run(`DELETE FROM posts WHERE id = ?`, [id])
-
+    } 
     res.redirect("/news")
 })
 
 router.get("/:id/edit", async (req, res) => {
     const id = req.params.id
 
-    if (!Number.isInteger(Number(id))) {
-        return res.status(400).send("Invalid ID")
-    }
-    
-    const rows = await db.all("SELECT * FROM posts WHERE id = ?", [id])
-    if (rows.length === 0) {
-    return res.status(404).send("Post not found")
-    }
+    if (req.session.adminStatus) {
+        if (!Number.isInteger(Number(id))) {
+            return res.status(400).send("Invalid ID")
+        }
+        const rows = await db.all("SELECT * FROM posts WHERE id = ?", [id])
+        if (rows.length === 0) {
+        return res.status(404).send("Post not found")
+        }
 
-    res.render('edit.njk', {
+        res.render('edit.njk', {
         message: "Edit Post",
         rows: rows[0],
-    })
+        })
+    } else {
+        res.redirect("/news")
+    }
 })
 
 router.post('/edit', async (req, res) => {
