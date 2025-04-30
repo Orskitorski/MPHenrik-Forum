@@ -83,13 +83,6 @@ router.get("/signup", (req, res) => {
   } else {
     res.redirect("/")
   }
-  
-  
-  res.render("signup.njk", { 
-      title: "Sign Up", 
-      message: "Best service, legit.",
-      error: ""
-    })
 })
 
 router.post("/signup", async (req, res) => {
