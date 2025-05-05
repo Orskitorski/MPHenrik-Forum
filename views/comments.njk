@@ -2,9 +2,7 @@
 {% block content %}
 <main class="container">
   <h2>{{message}}</h2>
-  <h3><a href="{{newpost}}"></a></h3>
   <ul class="posts">
-    {%for post in posts%}
     <li class="post">
       <article>
         <header>
@@ -14,14 +12,35 @@
         <p>{{post.message}}</p>
         <footer>
           <ul>
-            <li><a href="/news/{{post.id}}"><i class="fa fa-reply"></i></a></li>
+            <li><a href=""><i class="fa fa-reply"></i></a></li>
             <li><a href="/news/{{post.id}}/edit"><i class="fa fa-pencil"></i></a></li>
             <li><a href="/news/{{post.id}}/delete"><i class="fa fa-trash"></i></a></li>
           </ul>
         </footer>
       </article>
     </li>
-    {%endfor%}
+    <h3>Comments:</h3>
+    <a href=/news/{{post.id}}/reply><button>Reply</button></a>
+    <ul class="comments">
+        {%for comment in comments%}
+        <li class="comment">
+          <article>
+            <header>
+              <h3><i class="fa fa-user"></i> {{comment.name}}</h3>
+              <time datetime="{{post.created_at}}">{{comment.created_at}}</time>
+            </header>
+            <p>{{comment.message}}</p>
+            <footer>
+              <ul>
+                <li><a href=""><i class="fa fa-reply"></i></a></li>
+                <li><a href="/news/{{post.id}}/{{comment.id}}/edit"><i class="fa fa-pencil"></i></a></li>
+                <li><a href="/news/{{post.id}}/{{comment.id}}/delete"><i class="fa fa-trash"></i></a></li>
+              </ul>
+            </footer>
+          </article>
+        </li>
+        {%endfor%}
+      </ul>
   </ul>
 </main>
 <script>

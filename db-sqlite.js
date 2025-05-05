@@ -7,7 +7,7 @@ const db = await open({
   driver: sqlite3.Database,
 });
 
-// Create the tweet table if it doesn't exist
+// Create the posts table if it doesn't exist
 await db.exec(`
   CREATE TABLE IF NOT EXISTS posts (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -26,7 +26,7 @@ await db.exec(`
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     );
   `);
-// Create the user table if it doesn't exist
+// Create the login table if it doesn't exist
 await db.exec(`
   CREATE TABLE IF NOT EXISTS login (
     id INTEGER PRIMARY KEY AUTOINCREMENT,

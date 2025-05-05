@@ -37,7 +37,7 @@ router.get("/login", (req, res) => {
 router.post("/login", async (req, res) => {
   const { username, password } = req.body
 
-  const result = await db.get(`SELECT * FROM login WHERE name = ?`, [username])
+  const result = await db.get(`SELECT * FROM login WHERE name = ?`, username)
 
   if (result === undefined) {
     res.render("login.njk", {
@@ -46,13 +46,13 @@ router.post("/login", async (req, res) => {
       error: "*Wrong username or password"
     })
   } else {
-    const dbpassword = await db.get(`SELECT password FROM login WHERE name = ?`, [username])
+    const dbpassword = await db.get(`SELECT password FROM login WHERE name = ?`, username)
   
     bcrypt.compare(password, dbpassword.password, async function(err, result) {
       if (result == true){
-        const id = await db.get(`SELECT id FROM login WHERE name = ?`, [username])
+        const id = await db.get(`SELECT id FROM login WHERE name = ?`, username)
         console.log(id)
-        const user = await db.all(`SELECT * FROM login WHERE name = ?`, [username])
+        const user = await db.all(`SELECT * FROM login WHERE name = ?`, username)
         req.session.login=true
         req.session.userId = id.id
         req.session.adminStatus = user[0].admin_status
@@ -88,13 +88,13 @@ router.get("/signup", (req, res) => {
 router.post("/signup", async (req, res) => {
   const { username, password } = req.body
 
-  const result = await db.get(`SELECT * FROM login WHERE name = ?`, [username])
+  const result = await db.get(`SELECT * FROM login WHERE name = ?`, username)
 
   if (result === undefined) {
     const hashedPW = await bcrypt.hash(password, 10)
 
     await db.run('INSERT INTO login (name, password) VALUES (?, ?)', username, hashedPW)
-    const id = db.get(`SELECT id FROM login WHERE name = ?`, [username])
+    const id = db.get(`SELECT id FROM login WHERE name = ?`, username)
     console.log(hashedPW)
     req.session.userId = id.id
     req.session.login = true
