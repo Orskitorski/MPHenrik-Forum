@@ -40,17 +40,17 @@ router.get("/", async (req, res) => {
 
 router.get("/:id/delete", async (req, res) => {
     const id = req.params.id
-    const post = await db.all("SELECT * FROM posts WHERE posts.id = ?", id)
+    const post = await db.get("SELECT * FROM posts WHERE posts.id = ?", id)
 
     if (!Number.isInteger(Number(id))) {
         return res.status(400).send("Invalid Post-ID")
     }
 
-    if (post.length === 0) {
+    if (post === undefined) {
         return res.status(400).send("Post not found")
     }
 
-    if (req.session.userId == post[0].author_id) {
+    if (req.session.userId == post.author_id) {
         await db.run(`DELETE FROM posts WHERE id = ?`, id)
         await db.run("DELETE FROM comments WHERE comments.post_id = ?", id)
     }
@@ -59,19 +59,19 @@ router.get("/:id/delete", async (req, res) => {
 
 router.get("/:id/edit", async (req, res) => {
     const id = req.params.id
-    const post = await db.all("SELECT * FROM posts WHERE posts.id = ?", id)
-    if (post.length === 0) {
+    const post = await db.get("SELECT * FROM posts WHERE posts.id = ?", id)
+    if (post === undefined) {
         return res.status(404).send("Post not found")
     }
 
-    if (req.session.userId == post[0].author_id) {
+    if (req.session.userId == post.author_id) {
         if (!Number.isInteger(Number(id))) {
             return res.status(400).send("Invalid Post-ID")
         }
 
         res.render('edit.njk', {
             message: "Edit Post",
-            post: post[0],
+            post: post,
             loginbutton: "Log Out",
             loginURL: "/logout",
             route: "/news/edit"
@@ -125,7 +125,7 @@ router.get("/:id", async (req, res) => {
 
     const post = await db.get("SELECT posts.*, login.name FROM posts JOIN login on posts.author_id = login.id WHERE posts.id = ?", id)
     console.log(post)
-    if (post.length === 0) {
+    if (post === undefined) {
         return res.status(404).send("Post not found")
     }
     const comments = await db.all("SELECT comments.*, login.name FROM comments JOIN login on comments.author_id = login.id WHERE comments.post_id = ?", id)
@@ -156,8 +156,8 @@ router.get("/:id/reply", async (req, res) => {
     if (!Number.isInteger(Number(id))) {
         return res.status(400).send("Invalid Post-ID")
     }
-    const post = await db.all("SELECT * FROM posts WHERE id = ?", id)
-    if (post.length === 0) {
+    const post = await db.get("SELECT * FROM posts WHERE id = ?", id)
+    if (post === undefined) {
         return res.status(404).send("Post not found")
     }
     const comments = await db.all("SELECT * FROM comments WHERE post_id = ?", id)
@@ -165,7 +165,7 @@ router.get("/:id/reply", async (req, res) => {
     if (req.session.login) {
         res.render("post.njk", {
             message: "Post Comment",
-            post: post[0],
+            post: post,
             comments: comments,
             loginbutton: "Log Out",
             loginURL: "/logout",
@@ -199,15 +199,15 @@ router.get("/:id/:commentId/edit", async (req, res) => {
         return res.status(400).send("Invalid Comment-ID")
     }
 
-    const comment = await db.all("SELECT * FROM comments WHERE comments.post_id = ? AND comments.id = ?", id, commentId)
+    const comment = await db.get("SELECT * FROM comments WHERE comments.post_id = ? AND comments.id = ?", id, commentId)
 
-    if (comment.length === 0) {
+    if (comment === undefined) {
         return res.status(400).send("Comment Not Found")
     } else {
-        if (req.session.userId == comment[0].author_id) {
+        if (req.session.userId == comment.author_id) {
             res.render("edit.njk", {
                 message: "Edit Comment",
-                post: comment[0],
+                post: comment,
                 loginbutton: "Log Out",
                 loginURL: "/logout",
                 route: "/news/comment/edit",
@@ -237,9 +237,9 @@ router.get("/:id/:commentId/delete", async (req, res) => {
         return res.status(400).send("Invalid Comment-ID")
     }
 
-    const comment = await db.all("SELECT * FROM comments WHERE comments.post_id = ? AND comments.id = ?", id, commentId)
+    const comment = await db.get("SELECT * FROM comments WHERE comments.post_id = ? AND comments.id = ?", id, commentId)
 
-    if (req.session.userId == comment[0].author_id) {
+    if (req.session.userId == comment.author_id) {
         await db.run("DELETE FROM comments WHERE comments.id = ?", commentId)
     }
 

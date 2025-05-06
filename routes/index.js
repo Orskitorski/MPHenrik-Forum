@@ -96,9 +96,9 @@ router.post("/signup", async (req, res) => {
     const hashedPW = await bcrypt.hash(password, 10)
 
     await db.run('INSERT INTO login (name, password) VALUES (?, ?)', username, hashedPW)
-    const id = db.get(`SELECT id FROM login WHERE name = ?`, username)
-    console.log(hashedPW)
+    const id = await db.get(`SELECT id FROM login WHERE login.name = ?`, username)
     req.session.userId = id.id
+    console.log(req.session.userId)
     req.session.login = true
     res.redirect("/")
   } else {
