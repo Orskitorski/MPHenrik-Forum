@@ -18,7 +18,6 @@ router.get("/", async (req, res) => {
 
     if (req.session.login && req.session.adminStatus) {
         res.render("news.njk", {
-            message: `The Official "My Pocket Henrik" Forum!`,
             posts: posts,
             loginbutton: "Log Out",
             loginURL: "/logout",
@@ -26,14 +25,12 @@ router.get("/", async (req, res) => {
         })
     } else if (req.session.login) {
         res.render("news.njk", {
-            message: `The Official "My Pocket Henrik" Forum!`,
             posts: posts,
             loginbutton: "Log Out",
             loginURL: "/logout"
         })
     } else {
         res.render("news.njk", {
-            message: `The Official "My Pocket Henrik" Forum!`,
             posts: posts,
             loginbutton: "Log In",
             loginURL: "/login"
@@ -42,35 +39,42 @@ router.get("/", async (req, res) => {
 })
 
 router.get("/:id/delete", async (req, res) => {
-
     const id = req.params.id
-    if (req.session.adminStatus) {
-        if (!Number.isInteger(Number(id))) {
-            return res.status(400).send("Invalid ID")
-        }
+    const post = await db.all("SELECT * FROM posts WHERE posts.id = ?", id)
 
+    if (!Number.isInteger(Number(id))) {
+        return res.status(400).send("Invalid Post-ID")
+    }
+
+    if (post.length === 0) {
+        return res.status(400).send("Post not found")
+    }
+
+    if (req.session.userId == post[0].author_id) {
         await db.run(`DELETE FROM posts WHERE id = ?`, id)
         await db.run("DELETE FROM comments WHERE comments.post_id = ?", id)
-
     }
     res.redirect("/news")
 })
 
 router.get("/:id/edit", async (req, res) => {
     const id = req.params.id
+    const post = await db.all("SELECT * FROM posts WHERE posts.id = ?", id)
+    if (post.length === 0) {
+        return res.status(404).send("Post not found")
+    }
 
-    if (req.session.adminStatus) {
+    if (req.session.userId == post[0].author_id) {
         if (!Number.isInteger(Number(id))) {
-            return res.status(400).send("Invalid ID")
-        }
-        const rows = await db.all("SELECT * FROM posts WHERE id = ?", id)
-        if (rows.length === 0) {
-            return res.status(404).send("Post not found")
+            return res.status(400).send("Invalid Post-ID")
         }
 
         res.render('edit.njk', {
             message: "Edit Post",
-            rows: rows[0],
+            post: post[0],
+            loginbutton: "Log Out",
+            loginURL: "/logout",
+            route: "/news/edit"
         })
     } else {
         res.redirect("/news")
@@ -95,7 +99,10 @@ router.get("/post", async (req, res) => {
     if (req.session.login && req.session.adminStatus == 1) {
         res.render('post.njk', {
             message: "New Post",
-            user: user
+            user: user,
+            loginbutton: "Log Out",
+            loginURL: "/logout",
+            route: "/news/post",
         })
     } else {
         res.redirect("/news")
@@ -112,6 +119,9 @@ router.post("/post", async (req, res) => {
 
 router.get("/:id", async (req, res) => {
     const id = req.params.id
+    if (!Number.isInteger(Number(id))) {
+        return res.status(400).send("Invalid Post-ID")
+    }
 
     const post = await db.get("SELECT posts.*, login.name FROM posts JOIN login on posts.author_id = login.id WHERE posts.id = ?", id)
     console.log(post)
@@ -144,7 +154,7 @@ router.get("/:id", async (req, res) => {
 router.get("/:id/reply", async (req, res) => {
     const id = req.params.id
     if (!Number.isInteger(Number(id))) {
-        return res.status(400).send("Invalid ID")
+        return res.status(400).send("Invalid Post-ID")
     }
     const post = await db.all("SELECT * FROM posts WHERE id = ?", id)
     if (post.length === 0) {
@@ -153,12 +163,13 @@ router.get("/:id/reply", async (req, res) => {
     const comments = await db.all("SELECT * FROM comments WHERE post_id = ?", id)
 
     if (req.session.login) {
-        res.render("reply.njk", {
+        res.render("post.njk", {
             message: "Post Comment",
             post: post[0],
             comments: comments,
             loginbutton: "Log Out",
-            loginURL: "/logout"
+            loginURL: "/logout",
+            route: "/news/reply",
         })
     } else {
         res.redirect("/login")
@@ -166,11 +177,10 @@ router.get("/:id/reply", async (req, res) => {
 })
 
 
-router.post("/:id/reply", async (req, res) => {
-    const id = req.params.id
-    const { message } = req.body
+router.post("/reply", async (req, res) => {
+    const { message, id } = req.body
     if (!Number.isInteger(Number(id))) {
-        return res.status(400).send("Invalid ID")
+        return res.status(400).send("Invalid Post-ID")
     }
 
     const result = await db.run("INSERT INTO comments (message, author_id, post_id) values (?, ?, ?)", message, req.session.userId, id)
@@ -178,11 +188,61 @@ router.post("/:id/reply", async (req, res) => {
     res.redirect(`/news/${id}`)
 })
 
+router.get("/:id/:commentId/edit", async (req, res) => {
+    const id = req.params.id
+    const commentId = req.params.commentId
+
+    if (!Number.isInteger(Number(id))) {
+        return res.status(400).send("Invalid Post-ID")
+    }
+    if (!Number.isInteger(Number(commentId))) {
+        return res.status(400).send("Invalid Comment-ID")
+    }
+
+    const comment = await db.all("SELECT * FROM comments WHERE comments.post_id = ? AND comments.id = ?", id, commentId)
+
+    if (comment.length === 0) {
+        return res.status(400).send("Comment Not Found")
+    } else {
+        if (req.session.userId == comment[0].author_id) {
+            res.render("edit.njk", {
+                message: "Edit Comment",
+                post: comment[0],
+                loginbutton: "Log Out",
+                loginURL: "/logout",
+                route: "/news/comment/edit",
+            })
+        } else {
+            res.redirect(`/news/${id}`)
+        }
+    }
+})
+
+router.post("/comment/edit", async (req, res) => {
+    const {id, postId, message} = req.body
+
+    await db.run(`UPDATE comments SET message=? where id=?`, message, id)
+    
+    res.redirect(`/news/${postId}`)
+})
+
 router.get("/:id/:commentId/delete", async (req, res) => {
     const id = req.params.id
     const commentId = req.params.commentId
 
-    await db.run("DELETE FROM comments WHERE comments.id = ?", commentId)
+    if (!Number.isInteger(Number(id))) {
+        return res.status(400).send("Invalid Post-ID")
+    }
+    if (!Number.isInteger(Number(commentId))) {
+        return res.status(400).send("Invalid Comment-ID")
+    }
+
+    const comment = await db.all("SELECT * FROM comments WHERE comments.post_id = ? AND comments.id = ?", id, commentId)
+
+    if (req.session.userId == comment[0].author_id) {
+        await db.run("DELETE FROM comments WHERE comments.id = ?", commentId)
+    }
+
     res.redirect(`/news/${id}`)
 })
 

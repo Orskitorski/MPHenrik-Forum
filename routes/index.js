@@ -4,8 +4,8 @@ import bcrypt from "bcrypt"
 
 const router = express.Router()
 
-router.get("/", async (req, res)=> {
-  if(req.session.login) {
+router.get("/", async (req, res) => {
+  if (req.session.login) {
     res.render("index.njk", {
       message: `Welcome to the "My Pocket Henrik" Forum!`,
       loginbutton: "Log Out",
@@ -21,17 +21,17 @@ router.get("/", async (req, res)=> {
 })
 
 router.get("/login", (req, res) => {
-    if(!req.session.login) {
-      res.render("login.njk", { 
-        title: "Login", 
-        message: "Best service, legit.",
-        error: "",
-        loginbutton: "Log In",
-        loginURL: "/login"
-      })
-    } else {
-      res.redirect("/")
-    }
+  if (!req.session.login) {
+    res.render("login.njk", {
+      title: "Login",
+      message: "Best service, legit.",
+      error: "",
+      loginbutton: "Log In",
+      loginURL: "/login"
+    })
+  } else {
+    res.redirect("/")
+  }
 })
 
 router.post("/login", async (req, res) => {
@@ -41,27 +41,29 @@ router.post("/login", async (req, res) => {
 
   if (result === undefined) {
     res.render("login.njk", {
-      title: "Login", 
-      message: "Best service, legit.", 
-      error: "*Wrong username or password"
+      title: "Login",
+      message: "Best service, legit.",
+      error: "*Wrong username or password",
+      loginbutton: "Log In",
+      loginURL: "/login"
     })
   } else {
     const dbpassword = await db.get(`SELECT password FROM login WHERE name = ?`, username)
-  
-    bcrypt.compare(password, dbpassword.password, async function(err, result) {
-      if (result == true){
+
+    bcrypt.compare(password, dbpassword.password, async function (err, result) {
+      if (result == true) {
         const id = await db.get(`SELECT id FROM login WHERE name = ?`, username)
         console.log(id)
         const user = await db.all(`SELECT * FROM login WHERE name = ?`, username)
-        req.session.login=true
+        req.session.login = true
         req.session.userId = id.id
         req.session.adminStatus = user[0].admin_status
         res.redirect("/news")
       }
       else {
         res.render("login.njk", {
-          title: "Login", 
-          message: "Best service, legit.", 
+          title: "Login",
+          message: "Best service, legit.",
           error: "Wrong username or password",
           loginbutton: "Log In",
           loginURL: "/login"
@@ -72,9 +74,9 @@ router.post("/login", async (req, res) => {
 })
 
 router.get("/signup", (req, res) => {
-  if(!req.session.login) {
+  if (!req.session.login) {
     res.render("signup.njk", {
-      title: "Sign Up", 
+      title: "Sign Up",
       message: "Best service, legit.",
       error: "",
       loginbutton: "Log In",
@@ -101,17 +103,17 @@ router.post("/signup", async (req, res) => {
     res.redirect("/")
   } else {
     res.render("signup.njk", {
-        title: "Sign Up", 
-        message: "Best service, legit.", 
-        error: "*User already exists",
-        loginbutton: "Log In",
-        loginURL: "/login"
+      title: "Sign Up",
+      message: "Best service, legit.",
+      error: "*User already exists",
+      loginbutton: "Log In",
+      loginURL: "/login"
     })
   }
 })
 
 router.get("/logout", (req, res) => {
-  req.session.destroy(function(err) {
+  req.session.destroy(function (err) {
     res.redirect("/")
   })
 })

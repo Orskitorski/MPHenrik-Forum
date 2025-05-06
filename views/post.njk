@@ -2,12 +2,14 @@
 {% block content %}
     <main class="container">
         <h2>{{message}}</h2>
-        <form action="/news/post" method="POST">
+        <form action="{{route}}" method="POST">
             <div class="form-field">
+                <input type="hidden" name="id" value="{{post.id}}">
+                <input type="hidden" name="postId" value="{{post.post_id}}">
                 <label for="message">Message:</label>
-                <textarea type="text" name="message" id="message"></textarea>
+                <textarea type="text" name="message" id="message" value="{{post.message}}"></textarea>
             </div>
-            <button type="submit">Post</button>
+            <button type="submit">Submit</button>
         </form>
     </main>
 {% endblock %}
