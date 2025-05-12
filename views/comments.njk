@@ -12,29 +12,31 @@
         <p>{{post.message}}</p>
         <footer>
           <ul>
-            <li><a href=""><i class="fa fa-reply"></i></a></li>
+            {%if loginId == post.author_id%}
             <li><a href="/news/{{post.id}}/edit"><i class="fa fa-pencil"></i></a></li>
             <li><a href="/news/{{post.id}}/delete"><i class="fa fa-trash"></i></a></li>
+            {%endif%}
           </ul>
         </footer>
       </article>
     </li>
+    <a href=/news/{{post.id}}/reply><i class="fa fa-reply"></i> Reply</a>
     <h3>Comments:</h3>
-    <a href=/news/{{post.id}}/reply><button>Reply</button></a>
     <ul class="comments">
         {%for comment in comments%}
         <li class="comment">
           <article>
             <header>
               <h3><i class="fa fa-user"></i> {{comment.name}}</h3>
-              <time datetime="{{post.created_at}}">{{comment.created_at}}</time>
+              <time datetime="{{comment.created_at}}">{{comment.created_at}}</time>
             </header>
             <p>{{comment.message}}</p>
             <footer>
               <ul>
-                <li><a href=""><i class="fa fa-reply"></i></a></li>
+                {%if loginId == comment.author_id%}
                 <li><a href="/news/{{post.id}}/{{comment.id}}/edit"><i class="fa fa-pencil"></i></a></li>
                 <li><a href="/news/{{post.id}}/{{comment.id}}/delete"><i class="fa fa-trash"></i></a></li>
+                {%endif%}
               </ul>
             </footer>
           </article>
@@ -49,7 +51,8 @@
     timeElements.forEach(timeElement => {
       const date = new Date(timeElement.getAttribute("datetime"));
       const now = new Date();
-      const diffInSeconds = Math.floor((now - date) / 1000);
+      const timeZoneOffset = (date.getTimezoneOffset()*60000)
+      const diffInSeconds = Math.floor((now - date + timeZoneOffset) / 1000);
       const diffInMinutes = Math.floor(diffInSeconds / 60);
       const diffInHours = Math.floor(diffInMinutes / 60);
       const diffInDays = Math.floor(diffInHours / 24);

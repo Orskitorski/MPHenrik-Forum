@@ -8,14 +8,12 @@ router.get("/", async (req, res) => {
   if (req.session.login) {
     res.render("index.njk", {
       message: `Welcome to the "My Pocket Henrik" Forum!`,
-      loginbutton: "Log Out",
-      loginURL: "/logout"
+      login: req.session.login,
     })
   } else {
     res.render("index.njk", {
       message: `Welcome to the "My Pocket Henrik" Forum!`,
-      loginbutton: "Log In",
-      loginURL: "/login"
+      login: req.session.login,
     })
   }
 })
@@ -26,11 +24,10 @@ router.get("/login", (req, res) => {
       title: "Login",
       message: "Best service, legit.",
       error: "",
-      loginbutton: "Log In",
-      loginURL: "/login"
+      login: req.session.login,
     })
   } else {
-    res.redirect("/")
+    return res.status(404).send("You are already logged in")
   }
 })
 
@@ -44,8 +41,7 @@ router.post("/login", async (req, res) => {
       title: "Login",
       message: "Best service, legit.",
       error: "*Wrong username or password",
-      loginbutton: "Log In",
-      loginURL: "/login"
+      login: req.session.login,
     })
   } else {
     const dbpassword = await db.get(`SELECT password FROM login WHERE name = ?`, username)
@@ -53,7 +49,6 @@ router.post("/login", async (req, res) => {
     bcrypt.compare(password, dbpassword.password, async function (err, result) {
       if (result == true) {
         const id = await db.get(`SELECT id FROM login WHERE name = ?`, username)
-        console.log(id)
         const user = await db.all(`SELECT * FROM login WHERE name = ?`, username)
         req.session.login = true
         req.session.userId = id.id
@@ -65,8 +60,7 @@ router.post("/login", async (req, res) => {
           title: "Login",
           message: "Best service, legit.",
           error: "Wrong username or password",
-          loginbutton: "Log In",
-          loginURL: "/login"
+          login: req.session.login,
         })
       }
     })
@@ -79,11 +73,10 @@ router.get("/signup", (req, res) => {
       title: "Sign Up",
       message: "Best service, legit.",
       error: "",
-      loginbutton: "Log In",
-      loginURL: "/login"
+      login: req.session.login,
     })
   } else {
-    res.redirect("/")
+    return res.status(400).send("You are already logged in")
   }
 })
 
@@ -94,11 +87,11 @@ router.post("/signup", async (req, res) => {
 
   if (result === undefined) {
     const hashedPW = await bcrypt.hash(password, 10)
+    console.log(hashedPW)
 
     await db.run('INSERT INTO login (name, password) VALUES (?, ?)', username, hashedPW)
     const id = await db.get(`SELECT id FROM login WHERE login.name = ?`, username)
     req.session.userId = id.id
-    console.log(req.session.userId)
     req.session.login = true
     res.redirect("/")
   } else {
@@ -106,8 +99,7 @@ router.post("/signup", async (req, res) => {
       title: "Sign Up",
       message: "Best service, legit.",
       error: "*User already exists",
-      loginbutton: "Log In",
-      loginURL: "/login"
+      login: req.session.login,
     })
   }
 })

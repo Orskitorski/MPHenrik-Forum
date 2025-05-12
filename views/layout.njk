@@ -16,13 +16,20 @@
         </header>
         <ul>
             <li>
-                <a href={{loginURL}}><button>{{loginbutton}}</button></a>
+                <a href="/">Home</a>
             </li>
             <li>
-                <a href=/news><button>News</button></a>
+                <a href=/news>News</a>
             </li>
             <li>
-                <a href="/"><button>Official Site</button></a>
+                <a href="/">Official Site</a>
+            </li>
+            <li>
+                {%if login%}
+                <a href="/logout">Log Out</a>
+                {%else%}
+                <a href="/login">Log In</a>
+                {%endif%}
             </li>
         </ul>
     </div>

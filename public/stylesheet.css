@@ -1,29 +1,75 @@
 body {
     width: 100%;
     display: inline-grid;
-    grid-template-areas:
-        "sidebar content";
+    grid-template-areas: 
+    "sidebar content";
     grid-template-rows: 1fr;
-    grid-template-columns: 1fr 5fr;
+    grid-template-columns: 1fr 6fr;
 
-    background-color: #FAFAFA;
-    color: #2F2E2D;
+    background-color: #2F2E2D;
+    color: #FAFAFA;
     font-family: sans-serif;
     font-size: 1.2rem;
 
+    button {
+        color: #FAFAFA;
+        outline-style: none;
+        border-style: none;
+        background-color: #30C484;
+        padding: 0.5rem;
+        padding-left: 1rem; 
+        padding-right: 1rem;
+        border-radius: 0.25rem;
+    }
+
+    button:hover {
+        background-color: #A9F0D1;
+    }
+
     a {
-        color: inherit;
+        color: #FAFAFA;
         text-decoration: none;
+        background-color: #30C484;
+        padding: 0.5rem;
+        padding-left: 1rem; 
+        padding-right: 1rem;
+        border-radius: 0.25rem;
+    }
+
+    a:hover {
+        background-color: #A9F0D1;
+        cursor: pointer;
     }
 
     time {
-        color: #2F2E2D;
+        color: #FAFAFA;
     }
 
-    textarea {
-        max-width: 15rem;
-        height: 10rem;
-        resize: none;
+    form {
+        padding: 1rem;
+        border: 2px solid #30C484;
+        border-radius: 0.25rem;
+
+        footer {
+            margin-top: 1rem;
+            margin-bottom: 0rem;
+            border-top: 2px solid #30C484;
+            color: #FAFAFA;
+    
+            ul {
+                width: 100%;
+                padding-left: 0rem;
+                margin-top: 1rem;
+                display: flex;
+                list-style: none;
+                justify-content: right;
+    
+                li {
+                    margin-left: 0.5rem;
+                    margin-right: 0.5rem;
+                }
+            }
+        }
     }
 
     .form-field {
@@ -35,28 +81,45 @@ body {
         select {
             max-width: 15rem;
         }
+
+        textarea {
+            max-width: 15rem;
+            height: 10rem;
+            resize: none;
+        }
     }
 
     .sidebar {
+        margin: 0.5rem;
         display: grid;
+        width: 100%;
         grid-template-rows: 75px 100px;
         grid-area: sidebar;
         background-color: #30C484;
+        color: #2F2E2D;
+        border-radius: 0.25rem;
 
         header {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            background-color: #30C484;
-            border-bottom: 2px solid #A9F0D1;
+            background-color: #2F2E2D;
+            border-bottom: 1px solid #2F2E2D;
+            border-radius: 0.25rem;
+            border: 3px solid #30C484;
             padding-bottom: 5.8rem;
 
             h1 {
+                color: #FAFAFA;
                 justify-self: right;
                 padding-left: 0.5rem;
             }
 
             img {
                 width: 5rem;
+            }
+
+            a {
+                background-color: inherit;
             }
         }
 
@@ -68,38 +131,20 @@ body {
                 padding: 0;
 
                 a {
-                    button {
-                        color: #2F2E2D;
-                    }
+                    margin-inline: auto;
+                    margin-top: 0.5rem;
+                    display: block;
+                    text-align: center;
+                    width: 95%;
+                    padding: 0.5rem;
+                    border-radius: 0.25rem;
+                }
+
+                a:hover {
+                    background-color: #A9F0D1;
+                    cursor: pointer;
                 }
             }
-        }
-
-        a {
-            padding: 0;
-        }
-
-        button {
-            border-radius: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #30C484;
-            border: none;
-            border-bottom: 1px solid #A9F0D1;
-            padding: 0;
-            font: inherit;
-            cursor: pointer;
-
-        }
-
-        button:hover {
-            border-radius: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #A9F0D1;
-            padding: 0;
-            font: inherit;
-            cursor: pointer;
         }
     }
 }
@@ -108,12 +153,6 @@ main {
     margin-inline: auto;
     margin-top: 5rem;
     width: 75%;
-
-    p {
-        a {
-            text-decoration: underline;
-        }
-    }
 
     h2 {
         padding-bottom: 1rem;
@@ -125,29 +164,37 @@ main {
 }
 
 .comments {
+    display: block;
     padding: 0;
     margin: 0;
-    margin-top: 3rem;
+    margin-top: 2rem;
     list-style: none;
 }
 
 .comment {
-    width: 75%;
-    height: 75%;
-    margin-bottom: 2rem;
-    border-radius: 0.5rem;
+    max-width: 90%;
+    margin-bottom: 1rem;
+    border: 2px solid #30C484;
+    border-radius: 0.25rem;
     padding: 1rem;
-    background-color: #A9F0D1;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    word-wrap: break-word;
+    margin-left: 7rem;
 
     p {
         margin: 1rem;
     }
 
+    a {
+        background-color: inherit;
+    }
+
     footer {
         margin-top: 0rem;
         margin-bottom: 0rem;
-        border-top: 1px solid #2F2E2D;
-        color: #2F2E2D;
+        border-top: 2px solid #30C484;
+        color: #FAFAFA;
 
         ul {
             width: 100%;
@@ -173,17 +220,22 @@ main {
 }
 
 .posts {
+    max-width: 60rem;
     padding: 0;
     margin: 0;
-    margin-top: 3rem;
+    margin-top: 2rem;
     list-style: none;
 }
 
 .post {
-    margin-bottom: 2rem;
-    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+    border-radius: 0.25rem;
     padding: 1rem;
-    background-color: #30C484;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    background-color: inherit;
+    border: 3px solid #30C484;
+    word-wrap: break-word;
 
     p {
         margin: 1rem;
@@ -192,8 +244,12 @@ main {
     footer {
         margin-top: 0rem;
         margin-bottom: 0rem;
-        border-top: 1px solid #2F2E2D;
-        color: #2F2E2D;
+        border-top: 3px solid #30C484;
+        color: #FAFAFA;
+
+        a {
+            background-color: inherit;
+        }
 
         ul {
             width: 100%;
