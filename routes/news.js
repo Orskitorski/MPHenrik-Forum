@@ -1,6 +1,7 @@
 import express from "express"
 import db from "../db-sqlite.js"
 import { ExpressValidator } from "express-validator"
+import { body, matchedData, validationResult } from 'express-validator';
 
 const router = express.Router()
 
@@ -58,7 +59,7 @@ router.get("/:id/edit", async (req, res) => {
     }
 
     if (req.session.userId == post.author_id) {
-        res.render('edit.njk', {
+        res.render('post.njk', {
             message: "Edit Post",
             post: post,
             login: req.session.login,
@@ -69,26 +70,28 @@ router.get("/:id/edit", async (req, res) => {
     }
 })
 
-router.post('/edit', async (req, res) => {
+router.post('/edit',
+    body("message").isLength({ min: 1, max: 200 }),
+    body("message").escape(),
+    body("id").isInt(),
+    async (req, res) => {
+        const errors = validationResult(req)
 
-    const { message, id } = req.body
+        if (!errors.isEmpty()) {return res.status(400).send("Invalid input")}
+        const { message, id } = matchedData(req)
 
-    if (!Number.isInteger(Number(id))) {
-        return res.status(400).send("Invalid ID")
-    }
+        const post = await db.get("SELECT * FROM posts WHERE posts.id = ?", id)
 
-    const post = await db.get("SELECT * FROM posts WHERE posts.id = ?", id)
+        if (post === undefined) {
+            return res.status(404).send("Post not found")
+        }
 
-    if (post === undefined) {
-        return res.status(404).send("Post not found")
-    }
+        if (req.session.userId == post.author_id) {
+            await db.run(`UPDATE posts SET message=? where id=?`, message, id)
+        }
 
-    if (req.session.userId == post.author_id) {
-        await db.run(`UPDATE posts SET message=? where id=?`, message, id)
-    }
-
-    res.redirect("/news")
-})
+        res.redirect("/news")
+    })
 
 router.get("/post", async (req, res) => {
     if (req.session.login && req.session.adminStatus == 1) {
@@ -102,15 +105,21 @@ router.get("/post", async (req, res) => {
     }
 })
 
-router.post("/post", async (req, res) => {
-    const { message } = req.body
+router.post("/post",
+    body("message").isLength({ min: 1, max: 200 }),
+    body("message").escape(),
+    async (req, res) => {
+        const errors = validationResult(req)
 
-    if (req.session.login && req.session.adminStatus == 1) {
-        await db.run(`INSERT INTO posts (author_id, message) values (?, ?)`, req.session.userId, message)
-    }
+        if (!errors.isEmpty()) { return res.status(400).send("Invalid input") }
+        const { message } = matchedData(req)
 
-    res.redirect("/news")
-})
+        if (req.session.login && req.session.adminStatus == 1) {
+            await db.run(`INSERT INTO posts (author_id, message) values (?, ?)`, req.session.userId, message)
+        }
+
+        res.redirect("/news")
+    })
 
 router.get("/:id", async (req, res) => {
     const id = req.params.id
@@ -144,6 +153,8 @@ router.get("/:id/reply", async (req, res) => {
     }
     const comments = await db.all("SELECT * FROM comments WHERE post_id = ?", id)
 
+    console.log(post)
+
     if (req.session.login) {
         res.render("post.njk", {
             message: "Post Comment",
@@ -157,20 +168,23 @@ router.get("/:id/reply", async (req, res) => {
     }
 })
 
+router.post("/reply",
+    body("message").isLength({ min: 1, max: 200 }),
+    body("message").escape(),
+    body("id").isInt(),
+    async (req, res) => {
+        const errors = validationResult(req)
 
-router.post("/reply", async (req, res) => {
-    const { message, id } = req.body
-    if (!Number.isInteger(Number(id))) {
-        return res.status(400).send("Invalid Post-ID")
-    }
+        if (!errors.isEmpty()) { return res.status(400).send("Invalid input") }
+        const { message, id } = matchedData(req)
 
-    if (req.session.login) {
-        await db.run("INSERT INTO comments (message, author_id, post_id) values (?, ?, ?)", message, req.session.userId, id)
-        res.redirect(`/news/${id}`)
-    } else {
-        return res.status(400).send("Something went wrong")
-    }
-})
+        if (req.session.login) {
+            await db.run("INSERT INTO comments (message, author_id, post_id) values (?, ?, ?)", message, req.session.userId, id)
+            res.redirect(`/news/${id}`)
+        } else {
+            return res.status(400).send("Something went wrong")
+        }
+    })
 
 router.get("/:id/:commentId/edit", async (req, res) => {
     const id = req.params.id
@@ -189,7 +203,7 @@ router.get("/:id/:commentId/edit", async (req, res) => {
         return res.status(400).send("Comment Not Found")
     } else {
         if (req.session.userId == comment.author_id) {
-            res.render("edit.njk", {
+            res.render("post.njk", {
                 message: "Edit Comment",
                 post: comment,
                 login: req.session.login,
@@ -201,29 +215,30 @@ router.get("/:id/:commentId/edit", async (req, res) => {
     }
 })
 
-router.post("/comment/edit", async (req, res) => {
-    const { id, postId, message } = req.body
+router.post("/comment/edit",
+    body("id").isInt(),
+    body("postId").isInt(),
+    body("message").isLength({ min: 1, max: 200 }),
+    body("message").escape(),
+    async (req, res) => {
+        const errors = validationResult(req)
 
-    if (!Number.isInteger(Number(postId))) {
-        return res.status(400).send("Invalid Post-ID")
-    }
-    if (!Number.isInteger(Number(id))) {
-        return res.status(400).send("Invalid Comment-ID")
-    }
+        if (!errors.isEmpty()) { return res.status(400).send("Invalid input") }
+        const { id, postId, message } = matchedData(req)
 
-    const comment = await db.get("SELECT * FROM comments WHERE comments.post_id = ? AND comments.id = ?", postId, id)
+        const comment = await db.get("SELECT * FROM comments WHERE comments.post_id = ? AND comments.id = ?", postId, id)
 
-    if (comment === undefined) {
-        return res.status(400).send("Comment Not Found")
-    } else {
-        if (req.session.userId == comment.author_id) {
-            await db.run(`UPDATE comments SET message=? where id=?`, message, id)
-            res.redirect(`/news/${postId}`)
+        if (comment === undefined) {
+            return res.status(400).send("Comment Not Found")
         } else {
-            return res.status(400).send("Something went wrong")
+            if (req.session.userId == comment.author_id) {
+                await db.run(`UPDATE comments SET message=? where id=?`, message, id)
+                res.redirect(`/news/${postId}`)
+            } else {
+                return res.status(400).send("Something went wrong")
+            }
         }
-    }
-})
+    })
 
 router.get("/:id/:commentId/delete", async (req, res) => {
     const id = req.params.id

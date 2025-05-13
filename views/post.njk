@@ -7,7 +7,7 @@
                 <input type="hidden" name="id" value="{{post.id}}">
                 <input type="hidden" name="postId" value="{{post.post_id}}">
                 <label for="message">Message:</label>
-                <textarea type="text" name="message" id="message" value="{{post.message}}" maxlength="200"></textarea>
+                <textarea type="text" name="message" id="message" value="{{post.message}}" minlength="1" maxlength="200"></textarea>
             </div>
             <button type="submit">Submit</button>
         </form>

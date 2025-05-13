@@ -1,21 +1,16 @@
 import express from "express"
 import db from "../db-sqlite.js"
 import bcrypt from "bcrypt"
+import { ExpressValidator } from "express-validator"
+import { body, matchedData, validationResult } from "express-validator"
 
 const router = express.Router()
 
 router.get("/", async (req, res) => {
-  if (req.session.login) {
-    res.render("index.njk", {
-      message: `Welcome to the "My Pocket Henrik" Forum!`,
-      login: req.session.login,
-    })
-  } else {
-    res.render("index.njk", {
-      message: `Welcome to the "My Pocket Henrik" Forum!`,
-      login: req.session.login,
-    })
-  }
+  res.render("index.njk", {
+    message: `Welcome to the "My Pocket Henrik" Forum!`,
+    login: req.session.login,
+  })
 })
 
 router.get("/login", (req, res) => {
