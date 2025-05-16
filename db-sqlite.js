@@ -1,5 +1,6 @@
-import sqlite3 from 'sqlite3';
-import { open } from 'sqlite';
+import sqlite3 from "sqlite3";
+import { open } from "sqlite";
+import bcrypt from "bcrypt"
 
 // Open a database connection
 const db = await open({
@@ -37,10 +38,11 @@ await db.exec(`
   );
 `);
 
-// Insert a default user if the table is empty
+// Insert Admin user if the table is empty
+const hashedPW = await bcrypt.hash(process.env.Admin_PW, 10)
 const userCount = await db.get('SELECT COUNT(*) AS count FROM login');
 if (userCount.count === 0) {
-  await db.run('INSERT INTO login (name, password, admin_status) VALUES (?, ?, ?)', 'orskitorski', '$2b$10$j5CmQunEEQImQhR3n1HR3eAfq6az6SVogGAPsoOPDIaWZ/v32IxAK', 1);
+  await db.run('INSERT INTO login (name, password, admin_status) VALUES (?, ?, ?)', process.env.Admin_UN, hashedPW, 1);
 }
 
 // Export the database connection

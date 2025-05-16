@@ -132,7 +132,7 @@ router.get("/:id", async (req, res) => {
     if (post === undefined) {
         return res.status(404).send("Post not found")
     }
-    const comments = await db.all("SELECT comments.*, login.name FROM comments JOIN login on comments.author_id = login.id WHERE comments.post_id = ?", id)
+    const comments = await db.all("SELECT comments.*, login.name FROM comments JOIN login on comments.author_id = login.id WHERE comments.post_id = ? ORDER BY created_at DESC;", id)
     res.render("comments.njk", {
         message: "",
         post: post,
