@@ -1,12 +1,13 @@
 {% extends "layout.njk" %}
 {% block content %}
     <main class="container">
-        <h2>{{message}}</h2>
         <form action="{{route}}" method="POST">
+            <h2>{{message}}</h2>
             <div class="form-field">
                 <input type="hidden" name="id" value="{{post.id}}">
                 <input type="hidden" name="postId" value="{{post.post_id}}">
-                <label for="message">Message:</label>
+                <h3>Message:</h3>
+                <label for="message"></label>
                 <textarea type="text" name="message" id="message" value="{{post.message}}" minlength="1" maxlength="200"></textarea>
             </div>
             <button type="submit">Submit</button>

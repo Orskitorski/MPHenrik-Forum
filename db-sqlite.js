@@ -40,9 +40,11 @@ await db.exec(`
 
 // Insert Admin user if the table is empty
 const hashedPW = await bcrypt.hash(process.env.Admin_PW, 10)
+const hashedPW2 = await bcrypt.hash(process.env.Admin_PW2, 10)
 const userCount = await db.get('SELECT COUNT(*) AS count FROM login');
 if (userCount.count === 0) {
   await db.run('INSERT INTO login (name, password, admin_status) VALUES (?, ?, ?)', process.env.Admin_UN, hashedPW, 1);
+  await db.run('INSERT INTO login (name, password, admin_status) VALUES (?, ?, ?)', process.env.Admin_UN2, hashedPW2, 1);
 }
 
 // Export the database connection
