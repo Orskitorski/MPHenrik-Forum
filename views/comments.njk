@@ -36,6 +36,8 @@
                 {%if loginId == comment.author_id%}
                 <li><a href="/news/{{post.id}}/{{comment.id}}/edit"><i class="fa fa-pencil"></i></a></li>
                 <li><a href="/news/{{post.id}}/{{comment.id}}/delete"><i class="fa fa-trash"></i></a></li>
+                {%elif adminStatus%}
+                <li><a href="/news/{{post.id}}/{{comment.id}}/delete"><i class="fa fa-trash"></i></a></li>
                 {%endif%}
               </ul>
             </footer>

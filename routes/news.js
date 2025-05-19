@@ -5,12 +5,6 @@ import { body, matchedData, validationResult } from 'express-validator';
 
 const router = express.Router()
 
-router.get("/test", async (req, res) => {
-    const result = await db.all("SELECT * FROM comments")
-
-    res.json(result)
-})
-
 router.get("/", async (req, res) => {
     const posts = await db.all(
         `SELECT posts.*, login.name FROM posts 
@@ -138,7 +132,8 @@ router.get("/:id", async (req, res) => {
         post: post,
         comments: comments,
         login: req.session.login,
-        loginId: req.session.userId
+        loginId: req.session.userId,
+        adminStatus: req.session.adminStatus
     })
 })
 
@@ -253,7 +248,7 @@ router.get("/:id/:commentId/delete", async (req, res) => {
 
     const comment = await db.get("SELECT * FROM comments WHERE comments.post_id = ? AND comments.id = ?", id, commentId)
 
-    if (req.session.userId == comment.author_id) {
+    if (req.session.userId == comment.author_id || req.session.adminStatus) {
         await db.run("DELETE FROM comments WHERE comments.id = ?", commentId)
         res.redirect(`/news/${id}`)
     } else {

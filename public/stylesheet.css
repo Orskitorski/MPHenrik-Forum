@@ -209,6 +209,10 @@ main {
         background-color: inherit;
     }
 
+    a:hover {
+        background-color: inherit;
+    }
+
     footer {
         margin-top: 0rem;
         margin-bottom: 0rem;
