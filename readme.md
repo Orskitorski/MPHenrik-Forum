@@ -15,5 +15,7 @@ När jag hostade min webbsida på glitch för första gången så gav jag Josua 
 
 Under tiden jag försökte fixa ett problem med kommentarerna så hade jag även en /test route som visade upp alla kommentarer så att jag enklare kunde visualisera databasen.
 
+Själva visuella delen av projektet testade jag med WAVE. Det mesta som den klagade på var kontrastfel på grund av min användning av vit som textfärg med en ganska ljus bakgrundsfärg på till exempel knappar. 
+
 ## Säkerhet
 Det finns 3 olika rättighetsnivåer på min webbplats: Guest (inte inloggad, kan se nyheter och kommentarer), User (inloggad, kan göra allting guest kan, kan lägga kommentarer på nyheter, kan ta bort och redigera sina egna kommentarer), och Admin (inloggad, kan göra allting som user kan, kan ta bort alla kommentarer, kan lägga upp nyheter, kan ta bort och redigera nyheter). Jag har använt mig av express-validator för att validera och sanera data som insamlats från formulär och url:s. Detta är viktigt för att förhindra personer (Josua) från att komma åt databasen och kunna ändra på saker utan att admins vet om det och eventuellt förstöra sidan.

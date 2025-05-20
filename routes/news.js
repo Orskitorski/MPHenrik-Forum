@@ -57,7 +57,8 @@ router.get("/:id/edit", async (req, res) => {
             message: "Edit Post",
             post: post,
             login: req.session.login,
-            route: "/news/edit"
+            route: "/news/edit",
+            edit: true
         })
     } else {
         return res.status(400).send("Something went wrong")
@@ -203,6 +204,7 @@ router.get("/:id/:commentId/edit", async (req, res) => {
                 post: comment,
                 login: req.session.login,
                 route: "/news/comment/edit",
+                edit: true
             })
         } else {
             return res.status(400).send("Something went wrong")

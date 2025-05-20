@@ -8,7 +8,11 @@
                 <input type="hidden" name="postId" value="{{post.post_id}}">
                 <h3>Message:</h3>
                 <label for="message"></label>
+                {% if edit %}
                 <textarea type="text" name="message" id="message" minlength="1" maxlength="200">{{post.message}}</textarea>
+                {% else %}
+                <textarea type="text" name="message" id="message" minlength="1" maxlength="200"></textarea>
+                {% endif %}
             </div>
             <button type="submit">Submit</button>
         </form>

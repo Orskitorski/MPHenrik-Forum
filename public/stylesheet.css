@@ -24,6 +24,10 @@ body {
         }
     }
 
+    p {
+        padding-bottom: 2rem;
+    }
+
     button {
         color: #FAFAFA;
         outline-style: none;
