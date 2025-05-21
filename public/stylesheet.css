@@ -12,7 +12,7 @@ body {
     font-family: sans-serif;
     font-size: 1.2rem;
 
-    .topBar {
+    .topbar {
         display: block;
         grid-area: heading;
         width: 100%;
@@ -44,6 +44,7 @@ body {
     }
 
     a {
+        cursor: pointer;
         color: #FAFAFA;
         text-decoration: none;
         background-color: #30C484;
@@ -66,6 +67,7 @@ body {
         padding: 1rem;
         border: 2px solid #30C484;
         border-radius: 0.25rem;
+        
 
         footer {
             margin-top: 1rem;
@@ -107,6 +109,58 @@ body {
             max-width: 15rem;
             height: 10rem;
             resize: none;
+        }
+    }
+
+    .hamburgermenu {
+        display: none;
+        grid-area: heading;
+        justify-self: right;
+        color:#30C484;
+        display: none;
+
+        .icon {
+            color:#30C484;
+            padding-top: 1rem;
+        }
+
+        .icon:hover {
+            color: #A9F0D1;
+        }
+
+        a {
+            justify-self: right;
+            background-color: inherit;
+            color: #2F2E2D;
+            font-size: 3rem;
+        }
+
+        #myLinks {
+            border: 3px solid #30C484;
+            background-color: #2F2E2D;
+            padding-left: 0;
+            display: none;
+            z-index: 2;
+
+            ul {
+                margin: 0;
+                padding-left: 0;
+                list-style: none;
+            }
+
+            a {
+                border-radius: 0;
+                text-align: left;
+                display: block;
+                width: 100%;
+                font-size: 2rem;
+                background-color: #30C484;
+                border-bottom: 2px solid #2F2E2D;
+            }
+
+            a:hover {
+                background-color: #A9F0D1;
+            }
         }
     }
 
@@ -155,7 +209,7 @@ body {
                     margin-inline: auto;
                     margin-top: 0.5rem;
                     display: block;
-                    text-align: center;
+                    text-align: left;
                     width: 95%;
                     padding: 0.5rem;
                     border-radius: 0.25rem;
@@ -167,6 +221,23 @@ body {
                 }
             }
         }
+    }
+
+    @media (max-width: 1000px) {
+        .sidebar {
+            display:none;
+        }
+        .hamburgermenu {
+            display:grid;
+        }
+    }
+}
+
+@media (max-width: 1000px) {
+    body {
+        grid-template-areas: 
+        "heading heading"
+        "content content";
     }
 }
 
