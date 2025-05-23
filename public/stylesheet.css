@@ -15,12 +15,13 @@ body {
     .topbar {
         display: block;
         grid-area: heading;
+        height: fit-content;
         width: 100%;
         border-bottom: 3px solid #30C484;
 
         h1 {
-            padding: 0.5rem;
-            padding-left: 1.5rem;
+            margin:0;
+            padding: 2.1rem;
         }
     }
 
@@ -67,7 +68,6 @@ body {
         padding: 1rem;
         border: 2px solid #30C484;
         border-radius: 0.25rem;
-        
 
         footer {
             margin-top: 1rem;
@@ -105,6 +105,10 @@ body {
             max-width: 15rem;
         }
 
+        input {
+            width: 100%;
+        }
+
         textarea {
             max-width: 15rem;
             height: 10rem;
@@ -116,16 +120,18 @@ body {
         display: none;
         grid-area: heading;
         justify-self: right;
-        color:#30C484;
+        background-color: #30C484;
         display: none;
 
         .icon {
-            color:#30C484;
-            padding-top: 1rem;
+            color:#2F2E2D;
+            padding: 1rem;
+            padding-left: 2.2rem;
+            padding-right: 2.2rem;
         }
 
         .icon:hover {
-            color: #A9F0D1;
+            color: #FAFAFA;
         }
 
         a {
@@ -136,7 +142,8 @@ body {
         }
 
         #myLinks {
-            border: 3px solid #30C484;
+            border: 1px solid #30C484;
+            border-bottom-left-radius: 0.25rem;
             background-color: #2F2E2D;
             padding-left: 0;
             display: none;
@@ -153,9 +160,8 @@ body {
                 text-align: left;
                 display: block;
                 width: 100%;
-                font-size: 2rem;
+                font-size: 1.75rem;
                 background-color: #30C484;
-                border-bottom: 2px solid #2F2E2D;
             }
 
             a:hover {
@@ -223,7 +229,16 @@ body {
         }
     }
 
-    @media (max-width: 1000px) {
+    @media (max-width: 700px) {
+        .topbar {
+            h1 {
+                padding-top: 2.3rem;
+                padding-bottom: 2.3rem;
+                padding-left: 1rem;
+                font-size: 2rem;
+            }
+        }
+
         .sidebar {
             display:none;
         }
@@ -231,20 +246,28 @@ body {
             display:grid;
         }
     }
-}
 
-@media (max-width: 1000px) {
-    body {
-        grid-template-areas: 
-        "heading heading"
-        "content content";
+    @media (min-width: 400px) {
+        .topbar {
+            h1::after {
+                content: "My Pocket Henrik";
+            }
+        }
+    }
+
+    @media (max-width: 400px) {
+        .topbar {
+            h1::after {
+                content: "MPH";
+            }
+        }
     }
 }
 
 main {
     grid-area: content;
     margin-inline: auto;
-    margin-top: 2rem;
+    padding: 2rem;
     width: 75%;
 
     h2 {
@@ -253,6 +276,22 @@ main {
 
     h3 {
         margin-bottom: 1rem;
+    }
+}
+
+@media (max-width: 700px) {
+    body {
+        grid-template-areas: 
+        "heading heading"
+        "content content";
+    }
+
+    time {
+        display:none;
+    }
+
+    main {
+        width: 95%;
     }
 }
 

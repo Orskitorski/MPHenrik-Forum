@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="sv">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,13 +9,14 @@
     <link rel="stylesheet" href="/stylesheet.css">
     <title>My Pocket Henrik Forum</title>
 </head>
+
 <body>
     <div class="topbar">
-        <h1>My Pocket Henrik</h1>
+        <h1></h1>
     </div>
 
     <div class="hamburgermenu">
-        <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+        <a href="javascript:void(0);" class="icon" id="icon" onclick="myFunction()">
             <i class="fa fa-bars"></i>
         </a>
         <div id="myLinks">
@@ -63,13 +65,14 @@
     {% endblock %}
     <script>
         function myFunction() {
-          var x = document.getElementById("myLinks");
-          if (x.style.display === "block") {
-            x.style.display = "none";
-          } else {
-            x.style.display = "block";
-          }
+            var mylinks = document.getElementById("myLinks");
+            if (mylinks.style.display === "block") {
+                mylinks.style.display = "none";
+            } else {
+                mylinks.style.display = "block";
+            }
         }
     </script>
 </body>
+
 </html>
