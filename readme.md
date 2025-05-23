@@ -13,6 +13,8 @@ Josua.
 
 När jag hostade min webbsida på glitch för första gången så gav jag Josua länken efter att han frågat. HAN FÖRSTÖRDE ALLT!!! Han lyckades komma åt mina post routes (jag visste inte att man kunde göra det). Så jag blev tvungen att fixa sanering och validering på post routesen också för att förhindra framtida angrepp (Tack Josua).
 
+I slutändan blev min sida Josua approved :)
+
 Under tiden jag försökte fixa ett problem med kommentarerna så hade jag även en /test route som visade upp alla kommentarer så att jag enklare kunde visualisera databasen.
 
 Själva visuella delen av projektet testade jag med WAVE. Det mesta som den klagade på var kontrastfel på grund av min användning av vit som textfärg med en ganska ljus bakgrundsfärg på till exempel knappar. Detta ville jag dock inte ändra eftersom det blir fulare >:/
