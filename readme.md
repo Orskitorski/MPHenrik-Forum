@@ -3,7 +3,7 @@ Jag har skapat en användare åt dig Jens så att du kan testa admin-funktionern
 Kolla på kommentarerna på classroom för din inloggning.
 
 ## Uppföljning utifrån min planering
-Jag följde nästan allting från min planering. Alla routes var samma och utförde samma uppgift. Det enda som jag ändrade var namnen på vissa saker. Såsom users tabellen som jag valde att döpa till login istället och /register routen som jag valde att döpa till /signup istället. Allting som jag planerade att göra har jag gjort. Jag hade velat hinna göra sidan mer responsiv. Detta var inte med i min planering men om jag hade mer tid över så skulle jag ha försökt anpassa den till 
+Jag följde nästan allting från min planering. Alla routes var samma och utförde samma uppgift. Det enda som jag ändrade var namnen på vissa saker. Såsom users tabellen som jag valde att döpa till login istället och /register routen som jag valde att döpa till /signup istället. Allting som jag planerade att göra har jag gjort.  
 
 ## Vad? Hur? Varför?
 Jag har skapat ett forum för det uppkommande hit-spelet My Pocket Henrik! Detta gjorde jag genom att återanvända koden från min Qwitter och sedan göra om mysql koden till sqlite för att kunna hosta sidan på Glitch. De flesta funktionerna jag behövde hade vi redan gjort på Qwitter såsom login, signup och en sida som visar alla posts. Utöver detta så fixade jag också säkerhet till sidan genom att använda express validator för att sanera och validera all insamlad data från formulär och url:s. I detta forum kan endast admins lägga upp nyheter och vanliga användare kan kommentera på dessa. Dessutom kan användare redigera och ta bort sina egna posts. Jag har även försökt designa och göra sidan responsiv med hjälp av css. 
