@@ -29,9 +29,9 @@ router.get("/login", (req, res) => {
 router.post("/login", async (req, res) => {
   const { username, password } = req.body
 
-  const result = await db.get(`SELECT * FROM login WHERE name = ?`, username)
+  const dbResult = await db.get(`SELECT * FROM login WHERE name = ?`, username)
 
-  if (result === undefined) {
+  if (dbResult === undefined) {
     res.render("login.njk", {
       title: "Login",
       message: "Best service, legit.",
@@ -39,15 +39,12 @@ router.post("/login", async (req, res) => {
       login: req.session.login,
     })
   } else {
-    const dbpassword = await db.get(`SELECT password FROM login WHERE name = ?`, username)
-
-    bcrypt.compare(password, dbpassword.password, async function (err, result) {
+    
+    bcrypt.compare(password, dbResult.password, async function (err, result) {
       if (result == true) {
-        const id = await db.get(`SELECT id FROM login WHERE name = ?`, username)
-        const user = await db.all(`SELECT * FROM login WHERE name = ?`, username)
         req.session.login = true
-        req.session.userId = id.id
-        req.session.adminStatus = user[0].admin_status
+        req.session.userId = dbResult.id
+        req.session.adminStatus = dbResult.admin_status
         res.redirect("/news")
       }
       else {
@@ -78,15 +75,14 @@ router.get("/signup", (req, res) => {
 router.post("/signup", async (req, res) => {
   const { username, password } = req.body
 
-  const result = await db.get(`SELECT * FROM login WHERE name = ?`, username)
+  const dbResult = await db.get(`SELECT * FROM login WHERE name = ?`, username)
 
-  if (result === undefined) {
+  if (dbResult === undefined) {
     const hashedPW = await bcrypt.hash(password, 10)
-    console.log(hashedPW)
 
     await db.run('INSERT INTO login (name, password) VALUES (?, ?)', username, hashedPW)
-    const id = await db.get(`SELECT id FROM login WHERE login.name = ?`, username)
-    req.session.userId = id.id
+    const dbResultNew = await db.get(`SELECT id FROM login WHERE login.name = ?`, username)
+    req.session.userId = dbResultNew.id
     req.session.login = true
     res.redirect("/")
   } else {

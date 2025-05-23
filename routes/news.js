@@ -100,6 +100,7 @@ router.get("/post", async (req, res) => {
     }
 })
 
+
 router.post("/post",
     body("message").isLength({ min: 1, max: 200 }),
     body("message").escape(),
@@ -124,8 +125,7 @@ router.get("/:id", async (req, res) => {
 
     const post = await db.get("SELECT posts.*, login.name FROM posts JOIN login on posts.author_id = login.id WHERE posts.id = ?", id)
 
-    if (post === undefined) {
-        return res.status(404).send("Post not found")
+    if (post === undefined) {        return res.status(404).send("Post not found")
     }
     const comments = await db.all("SELECT comments.*, login.name FROM comments JOIN login on comments.author_id = login.id WHERE comments.post_id = ? ORDER BY created_at DESC;", id)
     res.render("comments.njk", {
@@ -148,8 +148,6 @@ router.get("/:id/reply", async (req, res) => {
         return res.status(404).send("Post not found")
     }
     const comments = await db.all("SELECT * FROM comments WHERE post_id = ?", id)
-
-    console.log(post)
 
     if (req.session.login) {
         res.render("post.njk", {
