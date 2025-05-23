@@ -1,20 +1,22 @@
 {% extends "layout.njk" %}
 {% block content %}
-    <main class="container">
-        <form action="{{route}}" method="POST">
-            <h2>{{message}}</h2>
-            <div class="form-field">
-                <input type="hidden" name="id" value="{{post.id}}">
-                <input type="hidden" name="postId" value="{{post.post_id}}">
-                <h3>Message:</h3>
-                <label for="message"></label>
+<main class="container">
+    <form action="{{route}}" method="POST">
+        <h2>{{message}}</h2>
+        <div class="form-field">
+            <input type="hidden" name="id" value="{{post.id}}">
+            <input type="hidden" name="postId" value="{{post.post_id}}">
+            <h3>Message:</h3>
+            <label for="message">
                 {% if edit %}
-                <textarea type="text" name="message" id="message" minlength="1" maxlength="200">{{post.message}}</textarea>
+                <textarea type="text" name="message" id="message" minlength="1"
+                    maxlength="200">{{post.message}}</textarea>
                 {% else %}
                 <textarea type="text" name="message" id="message" minlength="1" maxlength="200"></textarea>
                 {% endif %}
-            </div>
-            <button type="submit">Submit</button>
-        </form>
-    </main>
+            </label>
+        </div>
+        <button type="submit">Submit</button>
+    </form>
+</main>
 {% endblock %}
